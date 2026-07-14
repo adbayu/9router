@@ -22,14 +22,13 @@ export function injectSystemPrompt(body, format, prompt) {
       return;
     default:
       // OpenAI and OpenAI-shaped formats (responses/codex/cursor/kiro/ollama)
-      injectMessagesSystem(body, prompt);
+      injectMessagesSystem(body, prompt, format);
   }
 }
 
 // OpenAI-shaped: messages[] (chat) or input[] (responses) or instructions (responses string)
-function injectMessagesSystem(body, prompt) {
-  // OpenAI Responses API: top-level string field
-  if (typeof body.instructions === "string") {
+  function  injectMessagesSystem(body, prompt, format) {
+    if (format === FORMATS.OPENAI_RESPONSES || format === FORMATS.OPENAI_RESPONSE || format === FORMATS.CODEX || typeof body.instructions === "string") {
     body.instructions = body.instructions
       ? `${body.instructions}${SEP}${prompt}`
       : prompt;
